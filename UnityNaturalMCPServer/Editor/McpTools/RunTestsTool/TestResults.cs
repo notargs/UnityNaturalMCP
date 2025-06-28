@@ -37,7 +37,7 @@ namespace UnityNaturalMCP.Editor.McpTools.RunTestsTool
         /// <summary>
         /// Returns true if all tests passed.
         /// </summary>
-        public bool success => (failCount + inconclusiveCount) == 0;
+        public bool success => (failCount + inconclusiveCount) == 0 && passCount > 0;
 
         /// <summary>
         /// Returns a JSON representation of the test results.

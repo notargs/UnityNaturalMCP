@@ -5,7 +5,7 @@ using NUnit.Framework.Interfaces;
 using UnityEditor.TestTools.TestRunner.Api;
 using TestStatus = UnityEditor.TestTools.TestRunner.Api.TestStatus;
 
-namespace UnityNaturalMCP.Tests.McpTools.RunTestsTool
+namespace UnityNaturalMCP.Editor.McpTools.RunTestsTool
 {
     [SuppressMessage("ReSharper", "UnassignedGetOnlyAutoProperty")]
     public class FakeTestResultAdaptor : ITestResultAdaptor
@@ -26,10 +26,10 @@ namespace UnityNaturalMCP.Tests.McpTools.RunTestsTool
         public string Message { get; set; }
         public string StackTrace { get; set; }
         public int AssertCount { get; }
-        public int FailCount { get; }
-        public int PassCount { get; }
-        public int SkipCount { get; }
-        public int InconclusiveCount { get; }
+        public int FailCount { get; set; }
+        public int PassCount { get; set; }
+        public int SkipCount { get; set; }
+        public int InconclusiveCount { get; set; }
         public bool HasChildren { get; set; }
         public IEnumerable<ITestResultAdaptor> Children { get; }
         public string Output { get; set; }
