@@ -72,6 +72,7 @@ namespace UnityNaturalMCP.Editor.McpTools.RunTestsTool
 
             TestResultCollector testResultCollector = null;
             TestRunnerApi testRunner = null;
+            string testJobGuid = null;
 
             try
             {
@@ -81,28 +82,23 @@ namespace UnityNaturalMCP.Editor.McpTools.RunTestsTool
                 TestRunnerApi.RegisterTestCallback(testResultCollector);
 
                 testRunner = ScriptableObject.CreateInstance<TestRunnerApi>();
-                var guid = testRunner.Execute(new ExecutionSettings(filter));
+                testJobGuid = testRunner.Execute(new ExecutionSettings(filter));
 
-                var result = await testResultCollector.WaitForRunFinished(cancellationToken);
-                if (!cancellationToken.IsCancellationRequested)
-                {
-                    return result;
-                }
-
-                TestRunnerApi.CancelTestRun(guid);
-                return "Test run cancelled.";
+                return await testResultCollector.WaitForRunFinished(cancellationToken);
             }
-            catch (Exception e)
+            catch (OperationCanceledException e)
             {
-                Debug.LogError($"Error running tests: {e.Message}");
-                return $"Error running tests: {e.Message}";
+                Debug.LogWarning(e.Message);
+                throw;
             }
             finally
             {
+                if (testJobGuid != null)
+                    TestRunnerApi.CancelTestRun(testJobGuid);
                 if (testResultCollector != null)
                     TestRunnerApi.UnregisterTestCallback(testResultCollector);
                 if (testRunner != null)
-                    Object.Destroy(testRunner);
+                    Object.DestroyImmediate(testRunner);
             }
         }
     }
